@@ -1,0 +1,28 @@
+package com.ems.ems.service;
+
+import com.ems.ems.dto.EmployeeDto;
+import com.ems.ems.entity.Employee;
+import org.springframework.data.domain.Page;
+
+import java.util.List;
+
+public interface EmployeeService {
+
+    EmployeeDto saveEmployee(EmployeeDto employeeDto);
+
+    List<EmployeeDto> getEmployees();
+
+    EmployeeDto getEmployeeById(Long id);
+
+    EmployeeDto updateEmployee(Long id , Employee employee);
+
+    void deleteByid(Long id);
+
+    List<EmployeeDto> searchByName(String name);
+
+    List<EmployeeDto> searchByDepartment(String name);
+
+    Page<EmployeeDto> getEmployeesWithPagination(int page, int size, String sortField, String sortDirection);
+
+
+}
