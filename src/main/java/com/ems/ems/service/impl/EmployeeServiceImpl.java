@@ -108,15 +108,5 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository.findAll(pageable)
                 .map(this::convertToDto);
     }
-    public void demoSmell() {
-        if (true) {
-            if (true) {
-                if (true) {
-                    if (true) {
-                        System.out.println("Too many nested ifs");
-                    }
-                }
-            }
-        }
-    }
+    
 }
