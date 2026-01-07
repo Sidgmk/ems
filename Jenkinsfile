@@ -1,11 +1,33 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'Maven'
+        jdk 'JDK17'
+    }
+
     stages {
-        stage('Test Jenkins') {
+
+        stage('Checkout Code') {
             steps {
-                echo 'Jenkinsfile detected successfully!'
+                git branch: 'main',
+                    url: 'https://github.com/Sidgmk/ems.git'
             }
+        }
+
+        stage('Build & Test') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build SUCCESS 🎉'
+        }
+        failure {
+            echo 'Build FAILED ❌'
         }
     }
 }
