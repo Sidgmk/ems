@@ -2,8 +2,12 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven'
         jdk 'JDK17'
+        maven 'Maven'
+    }
+
+    environment {
+        SONAR_SCANNER_HOME = tool 'SonarScanner'
     }
 
     stages {
@@ -11,23 +15,35 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/Sidgmk/ems.git'
+                    url: 'https://github.com/<your-username>/ems.git'
             }
         }
 
-        stage('Build & Test') {
+        stage('Build') {
             steps {
-                sh 'mvn clean package'
+                sh 'mvn clean package -DskipTests'
             }
         }
-    }
 
-    post {
-        success {
-            echo 'Build SUCCESS 🎉'
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    sh '''
+                    mvn sonar:sonar \
+                    -Dsonar.projectKey=ems \
+                    -Dsonar.projectName=EMS \
+                    -Dsonar.host.url=http://localhost:9000
+                    '''
+                }
+            }
         }
-        failure {
-            echo 'Build FAILED ❌'
+
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 2, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
         }
     }
 }
